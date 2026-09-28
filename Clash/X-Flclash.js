@@ -1,8 +1,9 @@
 const main = (config) => {
 
   // ================================================================
-  // FlClash / Mihomo Perfect-Rules (兼容版)
+  // FlClash / Mihomo Perfect-Rules（兼容版）
   // 支持：机场订阅 + 自建节点 + proxy-providers
+  // 默认：自动选择（全部节点测速）→ 业务组 / 一键代理 均指向它
   // ================================================================
 
 
@@ -193,6 +194,7 @@ const main = (config) => {
 
   const groupIcons = {
     "一键代理": "Proxy.png",
+    "自动选择": "Proxy.png",
     "国内直连": "China.png",
     "AI": "AI.png",
     "YouTube": "YouTube.png",
@@ -214,8 +216,7 @@ const main = (config) => {
     "美国": "United_States.png",
     "加拿大": "Other.png",
     "英国": "Other.png",
-    "其他地区": "Other.png",
-    "全部节点": "Proxy.png"
+    "其他地区": "Other.png"
   };
 
   function getGroupIcon(name) {
@@ -278,7 +279,6 @@ const main = (config) => {
     };
 
     if (region === "其他地区") {
-      // 排除已匹配的地区
       group["exclude-filter"] = otherExclude;
     } else {
       group.filter = regionFilters[region];
@@ -292,17 +292,17 @@ const main = (config) => {
 
 
   // ================================================================
-  // 12. 全部节点组（兜底）
+  // 12. 自动选择（全部节点 url-test，默认最优，带图标）
   // ================================================================
 
-  const allNodesGroup = {
-    name: "全部节点",
+  const autoSelectGroup = {
+    name: "自动选择",
     ...urlTestCommon,
     "include-all": true
   };
 
-  const allIcon = getGroupIcon("全部节点");
-  if (allIcon) allNodesGroup.icon = allIcon;
+  const autoIcon = getGroupIcon("自动选择");
+  if (autoIcon) autoSelectGroup.icon = autoIcon;
 
 
   // ================================================================
@@ -320,15 +320,16 @@ const main = (config) => {
 
 
   // ================================================================
-  // 14. 一键代理（总控）
+  // 14. 一键代理（默认指向「自动选择」）
   // ================================================================
 
-  const availableRegions = regionOrder.concat(["全部节点"]);
+  // 默认顺序：自动选择 → 各地区 → 国内直连
+  const availableTargets = ["自动选择"].concat(regionOrder).concat(["国内直连"]);
 
   const mainSelector = {
     name: "一键代理",
     type: "select",
-    proxies: availableRegions.concat(["国内直连"])
+    proxies: availableTargets
   };
 
   const mainIcon = getGroupIcon("一键代理");
@@ -336,14 +337,14 @@ const main = (config) => {
 
 
   // ================================================================
-  // 15. 业务策略组
+  // 15. 业务策略组（全部默认指向「自动选择」）
   // ================================================================
 
   function createBusinessGroup(name) {
     const group = {
       name: name,
       type: "select",
-      proxies: availableRegions.concat(["国内直连"])
+      proxies: availableTargets
     };
     const icon = getGroupIcon(name);
     if (icon) group.icon = icon;
@@ -374,8 +375,8 @@ const main = (config) => {
     mainSelector,
     domesticDirectGroup,
     ...businessGroups,
-    ...regionGroups,
-    allNodesGroup
+    autoSelectGroup,
+    ...regionGroups
   ];
 
 
