@@ -67,7 +67,7 @@ const main = (config) => {
       "119.29.29.29"
     ],
     "nameserver": [
-      "https://dns.alidns.com/dns-query",
+      "https://dns.alidns.com/dns-query"，
       "https://doh.pub/dns-query"
     ],
     "nameserver-policy": {
@@ -368,15 +368,15 @@ const main = (config) => {
 
 
   // ================================================================
-  // 16. 最终 proxy-groups
+  // 16. 最终 proxy-groups（显示顺序）
   // ================================================================
 
   config["proxy-groups"] = [
-    mainSelector,
-    domesticDirectGroup,
-    ...businessGroups,
-    autoSelectGroup,
-    ...regionGroups
+    autoSelectGroup,        // 1. 自动选择（最上方）
+    mainSelector,           // 2. 一键代理
+    domesticDirectGroup,    // 3. 国内直连
+    ...businessGroups,      // 4. 业务组（AI、YouTube…）
+    ...regionGroups         // 5. 地区组（香港、台湾…）
   ];
 
 
