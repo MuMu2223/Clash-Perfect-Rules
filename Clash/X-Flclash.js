@@ -368,15 +368,15 @@ const main = (config) => {
 
 
   // ================================================================
-  // 16. 最终 proxy-groups（显示顺序）
+  // 16. 最终 proxy-groups
   // ================================================================
 
   config["proxy-groups"] = [
-    autoSelectGroup,        // 1. 自动选择（最上方）
-    mainSelector,           // 2. 一键代理
-    domesticDirectGroup,    // 3. 国内直连
-    ...businessGroups,      // 4. 业务组（AI、YouTube…）
-    ...regionGroups         // 5. 地区组（香港、台湾…）
+    mainSelector,
+    domesticDirectGroup,
+    ...businessGroups,
+    autoSelectGroup,
+    ...regionGroups
   ];
 
 
